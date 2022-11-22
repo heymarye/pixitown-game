@@ -4,32 +4,25 @@ const context = canvas.getContext('2d');
 canvas.width = 1024;
 canvas.height = 576;
 
-const collisionsOnMap = [];
-const boundaries = [];
+const mapImg = new Image();
+mapImg.src = '/assets/pelletTown.png';
+
+const foregroundImg = new Image();
+foregroundImg.src = '/assets/foreground.png';
+
+const playerImg = new Image();
+playerImg.src = '/assets/playerDown.png';
 
 const offset = {
   x: -735,
   y: -625 
 };
 
+const collisionsOnMap = [];
+const boundaries = [];
+
 for (let collision = 0; collision < collisions.length; collision += 70) {
   collisionsOnMap.push(collisions.slice(collision, 70 + collision));
-}
-
-class Boundary {
-  static width = 48;
-  static height = 48;
-  
-  constructor({ position }) {
-    this.position = position;
-    this.width = Boundary.width;
-    this.height = Boundary.height;
-  }
-
-  draw() {
-    context.fillStyle = 'rgba(255, 0, 0, 0.0)';
-    context.fillRect(this.position.x, this.position.y, this.width, this.height);
-  }
 }
 
 collisionsOnMap.forEach((row, rowIndex) => {
@@ -45,14 +38,7 @@ collisionsOnMap.forEach((row, rowIndex) => {
   });
 });
 
-const mapImg = new Image();
-mapImg.src = '/assets/pelletTown.png';
-
-const playerImg = new Image();
-playerImg.src = '/assets/playerDown.png';
-
 let lastKey = '';
-
 const keys = {
   w: {
     pressed: false,
@@ -146,32 +132,6 @@ window.addEventListener('keyup', ({ keyCode }) => {
   }
 });
 
-class Sprite {
-  constructor({ position, image, frames = { max: 1 } }) {
-    this.position = position;
-    this.image = image;
-    this.image.onload = () => {
-      this.width = this.image.width / this.frames.max;
-      this.height = this.image.height;
-    };
-    this.frames = frames;
-  }
-
-  draw() {
-    context.drawImage(
-      this.image,
-      0, 
-      0, 
-      this.image.width / this.frames.max, 
-      this.image.height, 
-      this.position.x,
-      this.position.y,
-      this.image.width / this.frames.max, 
-      this.image.height 
-    );
-  }
-}
-
 const map = new Sprite({
   position: {
     x: offset.x,
@@ -191,6 +151,14 @@ const player = new Sprite({
   }
 });
 
+const foreground = new Sprite({
+  position: {
+    x: offset.x,
+    y: offset.y
+  },
+  image: foregroundImg
+});
+
 function rectangularCollision({ firstRectangle, secondRectangle }) {
   return firstRectangle.position.x + firstRectangle.width >= secondRectangle.position.x &&
   firstRectangle.position.x <= secondRectangle.position.x + secondRectangle.width &&
@@ -198,7 +166,7 @@ function rectangularCollision({ firstRectangle, secondRectangle }) {
   firstRectangle.position.y <= secondRectangle.position.y + secondRectangle.height;
 }
 
-const statics = [map, ...boundaries];  
+const statics = [map, ...boundaries, foreground];  
 
 function animate() {
   window.requestAnimationFrame(animate);
@@ -207,6 +175,7 @@ function animate() {
     boundary.draw();
   });
   player.draw();
+  foreground.draw();
   
   let isMoving = true;
   if (
