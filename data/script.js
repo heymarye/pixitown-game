@@ -9,7 +9,7 @@ const boundaries = [];
 
 const offset = {
   x: -735,
-  y: -600 
+  y: -625 
 };
 
 for (let collision = 0; collision < collisions.length; collision += 70) {
@@ -17,16 +17,18 @@ for (let collision = 0; collision < collisions.length; collision += 70) {
 }
 
 class Boundary {
-  constructor({ position }) {
-    this.position = position;
-  }
-
   static width = 48;
   static height = 48;
+  
+  constructor({ position }) {
+    this.position = position;
+    this.width = Boundary.width;
+    this.height = Boundary.height;
+  }
 
   draw() {
     context.fillStyle = 'rgba(255, 0, 0, 0.0)';
-    context.fillRect(this.position.x, this.position.y, Boundary.width, Boundary.height);
+    context.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 }
 
