@@ -25,7 +25,7 @@ class Boundary {
   static height = 48;
 
   draw() {
-    context.fillStyle = 'red';
+    context.fillStyle = 'rgba(255, 0, 0, 0.0)';
     context.fillRect(this.position.x, this.position.y, Boundary.width, Boundary.height);
   }
 }
@@ -145,13 +145,28 @@ window.addEventListener('keyup', ({ keyCode }) => {
 });
 
 class Sprite {
-  constructor({ position, image }) {
+  constructor({ position, image, frames = { max: 1 } }) {
     this.position = position;
     this.image = image;
+    this.image.onload = () => {
+      this.width = this.image.width / this.frames.max;
+      this.height = this.image.height;
+    };
+    this.frames = frames;
   }
 
   draw() {
-    context.drawImage(this.image, this.position.x, this.position.y);
+    context.drawImage(
+      this.image,
+      0, 
+      0, 
+      this.image.width / this.frames.max, 
+      this.image.height, 
+      this.position.x,
+      this.position.y,
+      this.image.width / this.frames.max, 
+      this.image.height 
+    );
   }
 }
 
@@ -160,8 +175,28 @@ const map = new Sprite({
     x: offset.x,
     y: offset.y
   },
-  image: mapImg,
+  image: mapImg
 });
+
+const player = new Sprite({
+  position: {
+    x: canvas.width / 2 - 192 / 4 / 2,
+    y: canvas.height / 2 - 68 / 2
+  },
+  image: playerImg,
+  frames: {
+    max: 4
+  }
+});
+
+function rectangularCollision({ firstRectangle, secondRectangle }) {
+  return firstRectangle.position.x + firstRectangle.width >= secondRectangle.position.x &&
+  firstRectangle.position.x <= secondRectangle.position.x + secondRectangle.width &&
+  firstRectangle.position.y + firstRectangle.height >= secondRectangle.position.y &&
+  firstRectangle.position.y <= secondRectangle.position.y + secondRectangle.height;
+}
+
+const statics = [map, ...boundaries];  
 
 function animate() {
   window.requestAnimationFrame(animate);
@@ -169,38 +204,97 @@ function animate() {
   boundaries.forEach(boundary => {
     boundary.draw();
   });
-  context.drawImage(
-    playerImg,
-    0, //x-coordinate to begin cropping from
-    0, //y-coordinate to begin cropping from
-    playerImg.width / 4, //crop width
-    playerImg.height, //crop height
-    canvas.width / 2 - playerImg.width / 4 / 2, //actual x-coordinate
-    canvas.height / 2 - playerImg.height / 2, //actual y-coordinate
-    playerImg.width / 4, //actual width
-    playerImg.height //actual height
-  );
-
+  player.draw();
+  
+  let isMoving = true;
   if (
     (keys.w.pressed && lastKey === 'w') ||
     (keys.ArrowUp.pressed && lastKey === 'ArrowUp')
   ) {
-    map.position.y += 3;
+    for (let boundary = 0; boundary < boundaries.length; boundary++) {
+      if (rectangularCollision({
+        firstRectangle: player,
+        secondRectangle: {...boundaries[boundary], 
+          position: {
+            x: boundaries[boundary].position.x,
+            y: boundaries[boundary].position.y + 3
+        }}
+      })) {
+        isMoving = false;
+        break;
+      }
+    }
+    if (isMoving) {
+      statics.forEach(static => {
+        static.position.y += 3;
+      });
+    }
   } else if (
     (keys.s.pressed && lastKey === 's') ||
     (keys.ArrowDown.pressed && lastKey === 'ArrowDown')
   ) {
-    map.position.y -= 3;
+    for (let boundary = 0; boundary < boundaries.length; boundary++) {
+      if (rectangularCollision({
+        firstRectangle: player,
+        secondRectangle: {...boundaries[boundary], 
+          position: {
+            x: boundaries[boundary].position.x,
+            y: boundaries[boundary].position.y - 3
+        }}
+      })) {
+        isMoving = false;
+        break;
+      }
+    }
+    if (isMoving) {
+      statics.forEach(static => {
+        static.position.y -= 3;
+      });
+    }
   } else if (
     (keys.a.pressed && lastKey === 'a') ||
     (keys.ArrowLeft.pressed && lastKey === 'ArrowLeft')
   ) {
-    map.position.x += 3;
+    for (let boundary = 0; boundary < boundaries.length; boundary++) {
+      if (rectangularCollision({
+        firstRectangle: player,
+        secondRectangle: {...boundaries[boundary], 
+          position: {
+            x: boundaries[boundary].position.x + 3,
+            y: boundaries[boundary].position.y
+        }}
+      })) {
+        isMoving = false;
+        break;
+      }
+    }
+    if (isMoving) {
+      statics.forEach(static => {
+        static.position.x += 3;
+      });
+    }
   } else if (
     (keys.d.pressed && lastKey === 'd') ||
     (keys.ArrowRight.pressed && lastKey === 'ArrowRight')
   ) {
-    map.position.x -= 3;
+    for (let boundary = 0; boundary < boundaries.length; boundary++) {
+      if (rectangularCollision({
+        firstRectangle: player,
+        secondRectangle: {...boundaries[boundary], 
+          position: {
+            x: boundaries[boundary].position.x - 3,
+            y: boundaries[boundary].position.y
+        }}
+      })) {
+        isMoving = false;
+        break;
+      }
+    }
+    if (isMoving) {
+      statics.forEach(static => {
+        static.position.x -= 3;
+      });
+    }
   }
 }
 animate();
