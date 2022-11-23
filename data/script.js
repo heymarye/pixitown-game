@@ -4,24 +4,6 @@ const context = canvas.getContext('2d');
 canvas.width = 1024;
 canvas.height = 576;
 
-const mapImg = new Image();
-mapImg.src = '/assets/pelletTown.png';
-
-const foregroundImg = new Image();
-foregroundImg.src = '/assets/foreground.png';
-
-const playerUpImg = new Image();
-playerUpImg.src = '/assets/playerUp.png';
-
-const playerDownImg = new Image();
-playerDownImg.src = '/assets/playerDown.png';
-
-const playerLeftImg = new Image();
-playerLeftImg.src = '/assets/playerLeft.png';
-
-const playerRightImg = new Image();
-playerRightImg.src = '/assets/playerRight.png';
-
 const offset = {
   x: -735,
   y: -625 
@@ -60,9 +42,14 @@ const player = new Sprite({
   }
 });
 
-const battle = {
+const battle = new Sprite({
+  position: {
+    x: 0,
+    y: 0
+  },
+  image: battleImg,
   initiated: false
-};
+});
 
 const collisions = [];
 const battleZones = [];
@@ -115,6 +102,7 @@ const statics = [map, foreground, ...collisions, ...battleZones];
 function animate() {
   const animation = window.requestAnimationFrame(animate);
   map.draw();
+  foreground.draw();
   collisions.forEach(boundary => {
     boundary.draw();
   });
@@ -122,7 +110,6 @@ function animate() {
     boundary.draw();
   });
   player.draw();
-  foreground.draw();
 
   let isMoving = true;
   player.isMoving = false;
@@ -260,10 +247,16 @@ function animate() {
           onComplete() {
             gsap.to('#overlappingBackground', {
               opacity: 1,
-              duration: 0.4
+              duration: 0.4,
+              onComplete() {
+                //activate a new animation loop
+                animateBattle();
+                gsap.to('#overlappingBackground', {
+                  opacity: 0,
+                  duration: 0.4
+                });
+              }
             });
-            //activate a new animation loop
-            animateBattle();
           }
         });
         break;
@@ -275,4 +268,5 @@ animate();
 
 function animateBattle() {
   window.requestAnimationFrame(animateBattle);
+  battle.draw();
 }
