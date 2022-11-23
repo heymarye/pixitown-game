@@ -1,3 +1,20 @@
 body {
   margin: 0 auto;
 }
+
+.background {
+  display: inline-block;
+  position: relative;
+}
+
+.background_battle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background-color: #fff;
+  opacity: 0;
+  pointer-events: none;
+}

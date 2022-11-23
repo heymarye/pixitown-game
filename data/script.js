@@ -35,6 +35,14 @@ const map = new Sprite({
   image: mapImg
 });
 
+const foreground = new Sprite({
+  position: {
+    x: offset.x,
+    y: offset.y
+  },
+  image: foregroundImg
+});
+
 const player = new Sprite({
   position: {
     x: canvas.width / 2 - 192 / 4 / 2,
@@ -52,13 +60,9 @@ const player = new Sprite({
   }
 });
 
-const foreground = new Sprite({
-  position: {
-    x: offset.x,
-    y: offset.y
-  },
-  image: foregroundImg
-});
+const battle = {
+  initiated: false
+};
 
 const collisions = [];
 const battleZones = [];
@@ -109,7 +113,7 @@ function rectangularCollision({ firstRectangle, secondRectangle }) {
 const statics = [map, foreground, ...collisions, ...battleZones];  
 
 function animate() {
-  window.requestAnimationFrame(animate);
+  const animation = window.requestAnimationFrame(animate);
   map.draw();
   collisions.forEach(boundary => {
     boundary.draw();
@@ -119,9 +123,12 @@ function animate() {
   });
   player.draw();
   foreground.draw();
-  
+
   let isMoving = true;
   player.isMoving = false;
+  if (battle.initiated) {
+    return;
+  }
   if (
     (keys.w.pressed && lastKey === 'w') ||
     (keys.ArrowUp.pressed && lastKey === 'ArrowUp')
@@ -242,10 +249,30 @@ function animate() {
       overlappingArea > (player.width + player.height) / 2 &&
       Math.random() < 0.01 //1% chance to activate a battle
       ) {
-        console.log('battle is activated');
+        //deactivate current animation loop
+        window.cancelAnimationFrame(animation);
+        battle.initiated = true;
+        gsap.to('#overlappingBackground', {
+          opacity: 1,
+          repeat: 3,
+          yoyo: true,
+          duration: 0.4,
+          onComplete() {
+            gsap.to('#overlappingBackground', {
+              opacity: 1,
+              duration: 0.4
+            });
+            //activate a new animation loop
+            animateBattle();
+          }
+        });
         break;
       }
     }
   }
 }
 animate();
+
+function animateBattle() {
+  window.requestAnimationFrame(animateBattle);
+}
