@@ -60,17 +60,36 @@ const foreground = new Sprite({
   image: foregroundImg
 });
 
-const boundaries = [];
-const collisionsOnMap = [];
+const collisions = [];
+const battleZones = [];
+const collisionsOnMap = []; //2d array to convert data from json to map
+const battleZonesOnMap = [];
 
-for (let collision = 0; collision < collisions.length; collision += 70) {
-  collisionsOnMap.push(collisions.slice(collision, 70 + collision));
+for (let collision = 0; collision < collisionsData.length; collision += 70) {
+  collisionsOnMap.push(collisionsData.slice(collision, 70 + collision));
+}
+
+for (let battleZone = 0; battleZone < battleZonesData.length; battleZone += 70) {
+  battleZonesOnMap.push(battleZonesData.slice(battleZone, 70 + battleZone));
 }
 
 collisionsOnMap.forEach((row, rowIndex) => {
   row.forEach((symbol, symbolIndex) => {
     if (symbol === 1025) {
-      boundaries.push(
+      collisions.push(
+        new Boundary({ 
+          position: {
+            x: symbolIndex * Boundary.width + offset.x,
+            y: rowIndex * Boundary.height + offset.y
+      }}));
+    }
+  });
+});
+
+battleZonesOnMap.forEach((row, rowIndex) => {
+  row.forEach((symbol, symbolIndex) => {
+    if (symbol === 1025) {
+      battleZones.push(
         new Boundary({ 
           position: {
             x: symbolIndex * Boundary.width + offset.x,
@@ -87,12 +106,15 @@ function rectangularCollision({ firstRectangle, secondRectangle }) {
   firstRectangle.position.y <= secondRectangle.position.y + secondRectangle.height;
 }
 
-const statics = [map, ...boundaries, foreground];  
+const statics = [map, foreground, ...collisions, ...battleZones];  
 
 function animate() {
   window.requestAnimationFrame(animate);
   map.draw();
-  boundaries.forEach(boundary => {
+  collisions.forEach(boundary => {
+    boundary.draw();
+  });
+  battleZones.forEach(boundary => {
     boundary.draw();
   });
   player.draw();
@@ -106,13 +128,13 @@ function animate() {
   ) {
     player.isMoving = true;
     player.image = player.sprites.up;
-    for (let boundary = 0; boundary < boundaries.length; boundary++) {
+    for (let boundary = 0; boundary < collisions.length; boundary++) {
       if (rectangularCollision({
         firstRectangle: player,
-        secondRectangle: {...boundaries[boundary], 
+        secondRectangle: {...collisions[boundary], 
           position: {
-            x: boundaries[boundary].position.x,
-            y: boundaries[boundary].position.y + 3
+            x: collisions[boundary].position.x,
+            y: collisions[boundary].position.y + 3
         }}
       })) {
         isMoving = false;
@@ -130,13 +152,13 @@ function animate() {
   ) {
     player.isMoving = true;
     player.image = player.sprites.down;
-    for (let boundary = 0; boundary < boundaries.length; boundary++) {
+    for (let boundary = 0; boundary < collisions.length; boundary++) {
       if (rectangularCollision({
         firstRectangle: player,
-        secondRectangle: {...boundaries[boundary], 
+        secondRectangle: {...collisions[boundary], 
           position: {
-            x: boundaries[boundary].position.x,
-            y: boundaries[boundary].position.y - 3
+            x: collisions[boundary].position.x,
+            y: collisions[boundary].position.y - 3
         }}
       })) {
         isMoving = false;
@@ -154,13 +176,13 @@ function animate() {
   ) {
     player.isMoving = true;
     player.image = player.sprites.left;
-    for (let boundary = 0; boundary < boundaries.length; boundary++) {
+    for (let boundary = 0; boundary < collisions.length; boundary++) {
       if (rectangularCollision({
         firstRectangle: player,
-        secondRectangle: {...boundaries[boundary], 
+        secondRectangle: {...collisions[boundary], 
           position: {
-            x: boundaries[boundary].position.x + 3,
-            y: boundaries[boundary].position.y
+            x: collisions[boundary].position.x + 3,
+            y: collisions[boundary].position.y
         }}
       })) {
         isMoving = false;
@@ -178,13 +200,13 @@ function animate() {
   ) {
     player.isMoving = true;
     player.image = player.sprites.right;
-    for (let boundary = 0; boundary < boundaries.length; boundary++) {
+    for (let boundary = 0; boundary < collisions.length; boundary++) {
       if (rectangularCollision({
         firstRectangle: player,
-        secondRectangle: {...boundaries[boundary], 
+        secondRectangle: {...collisions[boundary], 
           position: {
-            x: boundaries[boundary].position.x - 3,
-            y: boundaries[boundary].position.y
+            x: collisions[boundary].position.x - 3,
+            y: collisions[boundary].position.y
         }}
       })) {
         isMoving = false;
@@ -195,6 +217,34 @@ function animate() {
       statics.forEach(static => {
         static.position.x -= 3;
       });
+    }
+  }
+
+  //battle activation
+  if (
+    (keys.w.pressed || keys.ArrowUp.pressed) ||
+    (keys.s.pressed || keys.ArrowDown.pressed) ||
+    (keys.a.pressed || keys.ArrowLeft.pressed) ||
+    (keys.d.pressed || keys.ArrowRight.pressed)
+  ) {
+    for (let boundary = 0; boundary < battleZones.length; boundary++) {
+      //activate battle only if the player is halfway in the battle zones
+      const overlappingArea = 
+      (Math.min(player.position.x + player.width, battleZones[boundary].position.x + battleZones[boundary].width) - 
+      Math.max(player.position.x, battleZones[boundary].position.x)) *
+      (Math.min(player.position.y + player.height, battleZones[boundary].position.y + battleZones[boundary].height) -
+      Math.max(player.position.y, battleZones[boundary].position.y));
+      
+      if (rectangularCollision({
+        firstRectangle: player,
+        secondRectangle: battleZones[boundary]
+      }) && 
+      overlappingArea > (player.width + player.height) / 2 &&
+      Math.random() < 0.01 //1% chance to activate a battle
+      ) {
+        console.log('battle is activated');
+        break;
+      }
     }
   }
 }
