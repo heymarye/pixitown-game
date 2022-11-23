@@ -1,18 +1,20 @@
 class Sprite {
-  constructor({ position, image, frames = { max: 1 } }) {
+  constructor({ position, image, frames = { max: 1 }, sprites }) {
     this.position = position;
     this.image = image;
     this.image.onload = () => {
       this.width = this.image.width / this.frames.max;
       this.height = this.image.height;
     };
-    this.frames = frames;
+    this.frames = { ...frames, framesNumber: 0, elapsedFrames: 0 };
+    this.sprites = sprites;
+    this.isMoving = false;
   }
 
   draw() {
     context.drawImage(
       this.image,
-      0, 
+      this.frames.framesNumber * this.width, 
       0, 
       this.image.width / this.frames.max, 
       this.image.height, 
@@ -21,6 +23,20 @@ class Sprite {
       this.image.width / this.frames.max, 
       this.image.height 
     );
+
+    if (this.isMoving) {
+      if (this.frames.max > 1) {
+        this.frames.elapsedFrames++;
+      }
+      if (this.frames.elapsedFrames % 18 === 0) {
+        if (this.frames.framesNumber < this.frames.max - 1) {
+          this.frames.framesNumber++;
+        } else {
+          this.frames.framesNumber = 0;
+        }
+      }
+    }
+    return;
   }
 }
 

@@ -10,8 +10,17 @@ mapImg.src = '/assets/pelletTown.png';
 const foregroundImg = new Image();
 foregroundImg.src = '/assets/foreground.png';
 
-const playerImg = new Image();
-playerImg.src = '/assets/playerDown.png';
+const playerUpImg = new Image();
+playerUpImg.src = '/assets/playerUp.png';
+
+const playerDownImg = new Image();
+playerDownImg.src = '/assets/playerDown.png';
+
+const playerLeftImg = new Image();
+playerLeftImg.src = '/assets/playerLeft.png';
+
+const playerRightImg = new Image();
+playerRightImg.src = '/assets/playerRight.png';
 
 const offset = {
   x: -735,
@@ -31,9 +40,15 @@ const player = new Sprite({
     x: canvas.width / 2 - 192 / 4 / 2,
     y: canvas.height / 2 - 68 / 2
   },
-  image: playerImg,
+  image: playerDownImg,
   frames: {
     max: 4
+  },
+  sprites: {
+    up: playerUpImg,
+    down: playerDownImg,
+    left: playerLeftImg,
+    right: playerRightImg
   }
 });
 
@@ -84,10 +99,13 @@ function animate() {
   foreground.draw();
   
   let isMoving = true;
+  player.isMoving = false;
   if (
     (keys.w.pressed && lastKey === 'w') ||
     (keys.ArrowUp.pressed && lastKey === 'ArrowUp')
   ) {
+    player.isMoving = true;
+    player.image = player.sprites.up;
     for (let boundary = 0; boundary < boundaries.length; boundary++) {
       if (rectangularCollision({
         firstRectangle: player,
@@ -110,6 +128,8 @@ function animate() {
     (keys.s.pressed && lastKey === 's') ||
     (keys.ArrowDown.pressed && lastKey === 'ArrowDown')
   ) {
+    player.isMoving = true;
+    player.image = player.sprites.down;
     for (let boundary = 0; boundary < boundaries.length; boundary++) {
       if (rectangularCollision({
         firstRectangle: player,
@@ -132,6 +152,8 @@ function animate() {
     (keys.a.pressed && lastKey === 'a') ||
     (keys.ArrowLeft.pressed && lastKey === 'ArrowLeft')
   ) {
+    player.isMoving = true;
+    player.image = player.sprites.left;
     for (let boundary = 0; boundary < boundaries.length; boundary++) {
       if (rectangularCollision({
         firstRectangle: player,
@@ -154,6 +176,8 @@ function animate() {
     (keys.d.pressed && lastKey === 'd') ||
     (keys.ArrowRight.pressed && lastKey === 'ArrowRight')
   ) {
+    player.isMoving = true;
+    player.image = player.sprites.right;
     for (let boundary = 0; boundary < boundaries.length; boundary++) {
       if (rectangularCollision({
         firstRectangle: player,
