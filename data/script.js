@@ -46,7 +46,7 @@ const player = new Sprite({
 const battle = new Sprite({
   position: {
     x: 0,
-    y: 0
+    y: 0 
   },
   image: battleImg,
   initiated: false
@@ -62,7 +62,8 @@ const draggle = new Sprite({
     max: 4,
     frequency: 35
   },
-  animate: true
+  animate: true,
+  isEnemy: true
 });
 
 const emby = new Sprite({
@@ -299,3 +300,16 @@ function animateBattle() {
   draggle.draw();
   emby.draw();
 }
+
+document.querySelectorAll('button').forEach(button => {
+  button.addEventListener('click', () => {
+    emby.attack({ 
+      attack: {
+        name: 'Tackle',
+        type: 'Normal',
+        damage: 10
+      },
+      recipient: draggle
+    });
+  });
+});
