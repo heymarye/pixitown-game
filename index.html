@@ -10,13 +10,29 @@
   <body>
     <div class="background">
       <div id="overlappingBackground" class="background__battle"></div>
+      <!-- enemy's health bar -->
+      <div class="background__health-bar background__health-bar_draggle">
+        <p class="health-bar__character-name">Draggle</p>
+        <div class="health-bar__scale">
+          <div class="scale_wasted"></div>
+          <div class="scale_left"></div>
+        </div>
+      </div>
+      <!-- player's health bar -->
+      <div class="background__health-bar background__health-bar_emby">
+        <p class="health-bar__character-name">Emby</p>
+        <div class="health-bar__scale">
+          <div class="scale_wasted"></div>
+          <div class="scale_left"></div>
+        </div>
+      </div>
       <canvas></canvas>
       <div class="background__battle-bar">
         <div class="battle-bar__attacks">
-          <button class="attacks__btn">Attack</button>
-          <button class="attacks__btn">Attack</button>
-          <button class="attacks__btn">Attack</button>
-          <button class="attacks__btn">Attack</button>
+          <button>Attack</button>
+          <button>Attack</button>
+          <button>Attack</button>
+          <button>Attack</button>
         </div>
         <div class="battle-bar__attack-types">
           <p>Attack Type</p>

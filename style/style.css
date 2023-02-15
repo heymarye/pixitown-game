@@ -10,10 +10,14 @@ body {
 
 p {
   margin: 0;
+
+  font-size: 14px;
 }
 
 button {
   border: 0;
+
+  font-size: 14px;
 
   background-color: #fff;
   cursor: pointer;
@@ -50,8 +54,6 @@ button:hover {
   left: 0;
   right: 0;
 
-  font-size: 14px;
-
   background-color: #fff;
 }
 
@@ -62,10 +64,6 @@ button:hover {
   grid-template-columns: repeat(2, 1fr);
 }
 
-.attacks__btn {
-  font-size: 14px;
-}
-
 .battle-bar__attack-types {
   width: 33.33%;
   border-left: 3px solid #000;
@@ -73,4 +71,47 @@ button:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.background__health-bar {
+  width: 200px;
+  padding: 12px;
+  border: 3px solid #000;
+
+  position: absolute;
+
+  background-color: #fff;
+}
+
+.background__health-bar_draggle {
+  top: 50px;
+  left: 50px;
+}
+
+.background__health-bar_emby {
+  top: 330px;
+  right: 50px;
+}
+
+.health-bar__scale {
+  position: relative;
+}
+
+.scale_wasted {
+  height: 5px;
+  margin-top: 10px;
+
+  background-color: #ccc;
+}
+
+.scale_left {
+  width: 50%;
+  height: 5px;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  background-color: #35a329;
 }
