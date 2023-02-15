@@ -32,7 +32,8 @@ const player = new Sprite({
   },
   image: playerDownImg,
   frames: {
-    max: 4
+    max: 4,
+    frequency: 15
   },
   sprites: {
     up: playerUpImg,
@@ -49,6 +50,32 @@ const battle = new Sprite({
   },
   image: battleImg,
   initiated: false
+});
+
+const draggle = new Sprite({
+  position: {
+    x: 800,
+    y: 100
+  },
+  image: draggleImg,
+  frames: {
+    max: 4,
+    frequency: 35
+  },
+  animate: true
+});
+
+const emby = new Sprite({
+  position: {
+    x: 280,
+    y: 325
+  },
+  image: embyImg,
+  frames: {
+    max: 4,
+    frequency: 35
+  },
+  animate: true
 });
 
 const collisions = [];
@@ -102,7 +129,6 @@ const statics = [map, foreground, ...collisions, ...battleZones];
 function animate() {
   const animation = window.requestAnimationFrame(animate);
   map.draw();
-  foreground.draw();
   collisions.forEach(boundary => {
     boundary.draw();
   });
@@ -110,9 +136,10 @@ function animate() {
     boundary.draw();
   });
   player.draw();
+  foreground.draw();
 
   let isMoving = true;
-  player.isMoving = false;
+  player.animate = false;
   if (battle.initiated) {
     return;
   }
@@ -120,7 +147,7 @@ function animate() {
     (keys.w.pressed && lastKey === 'w') ||
     (keys.ArrowUp.pressed && lastKey === 'ArrowUp')
   ) {
-    player.isMoving = true;
+    player.animate = true;
     player.image = player.sprites.up;
     for (let boundary = 0; boundary < collisions.length; boundary++) {
       if (rectangularCollision({
@@ -144,7 +171,7 @@ function animate() {
     (keys.s.pressed && lastKey === 's') ||
     (keys.ArrowDown.pressed && lastKey === 'ArrowDown')
   ) {
-    player.isMoving = true;
+    player.animate = true;
     player.image = player.sprites.down;
     for (let boundary = 0; boundary < collisions.length; boundary++) {
       if (rectangularCollision({
@@ -168,7 +195,7 @@ function animate() {
     (keys.a.pressed && lastKey === 'a') ||
     (keys.ArrowLeft.pressed && lastKey === 'ArrowLeft')
   ) {
-    player.isMoving = true;
+    player.animate = true;
     player.image = player.sprites.left;
     for (let boundary = 0; boundary < collisions.length; boundary++) {
       if (rectangularCollision({
@@ -192,7 +219,7 @@ function animate() {
     (keys.d.pressed && lastKey === 'd') ||
     (keys.ArrowRight.pressed && lastKey === 'ArrowRight')
   ) {
-    player.isMoving = true;
+    player.animate = true;
     player.image = player.sprites.right;
     for (let boundary = 0; boundary < collisions.length; boundary++) {
       if (rectangularCollision({
@@ -269,4 +296,6 @@ animate();
 function animateBattle() {
   window.requestAnimationFrame(animateBattle);
   battle.draw();
+  draggle.draw();
+  emby.draw();
 }

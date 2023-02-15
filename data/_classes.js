@@ -1,5 +1,5 @@
 class Sprite {
-  constructor({ position, image, frames = { max: 1 }, sprites }) {
+  constructor({ position, image, frames = { max: 1, frequency: 15 }, sprites, animate = false }) {
     this.position = position;
     this.image = image;
     this.image.onload = () => {
@@ -8,7 +8,7 @@ class Sprite {
     };
     this.frames = { ...frames, framesNumber: 0, elapsedFrames: 0 };
     this.sprites = sprites;
-    this.isMoving = false;
+    this.animate = animate;
   }
 
   draw() {
@@ -24,11 +24,11 @@ class Sprite {
       this.image.height 
     );
 
-    if (this.isMoving) {
+    if (this.animate) {
       if (this.frames.max > 1) {
         this.frames.elapsedFrames++;
       }
-      if (this.frames.elapsedFrames % 18 === 0) {
+      if (this.frames.elapsedFrames % this.frames.frequency === 0) {
         if (this.frames.framesNumber < this.frames.max - 1) {
           this.frames.framesNumber++;
         } else {
