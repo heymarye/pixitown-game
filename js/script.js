@@ -79,6 +79,19 @@ const emby = new Sprite({
   animate: true
 });
 
+// const fireball = new Sprite({
+//   position: {
+//     x: emby.position.x,
+//     y: emby.position.y
+//   },
+//   image: fireballImg,
+//   frames: {
+//     max: 4,
+//     frequency: 10
+//   },
+//   animate: true
+// });
+
 const collisions = [];
 const battleZones = [];
 const collisionsOnMap = []; //2d array to convert data from json to map
@@ -294,22 +307,24 @@ function animate() {
 }
 animate();
 
+const renderedSprites = [draggle, emby];
+
 function animateBattle() {
   window.requestAnimationFrame(animateBattle);
   battle.draw();
-  draggle.draw();
-  emby.draw();
+  renderedSprites.forEach(sprite => {
+    sprite.draw();
+  });
 }
 
+//event listeners for attacks
 document.querySelectorAll('button').forEach(button => {
-  button.addEventListener('click', () => {
-    emby.attack({ 
-      attack: {
-        name: 'Tackle',
-        type: 'Normal',
-        damage: 10
-      },
-      recipient: draggle
+  button.addEventListener('click', (e) => {
+    const selectedAttack = attacks[e.currentTarget.innerHTML];
+    emby.attack({
+      attack: selectedAttack,
+      recipient: draggle,
+      renderedSprites
     });
   });
 });

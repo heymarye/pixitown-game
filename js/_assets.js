@@ -24,3 +24,6 @@ draggleImg.src = '/assets/draggleSprite.png';
 
 const embyImg = new Image();
 embyImg.src = '/assets/embySprite.png';
+
+// const fireballImg = new Image();
+// fireballImg.src = '/assets/fireball.png';
