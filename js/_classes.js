@@ -58,6 +58,10 @@ class Sprite {
 class Monster extends Sprite {
   constructor({ position, rotation = 0, image, frames = { max: 1, frequency: 15 }, sprites, animate = false, name, isEnemy = false, attacks }) {
     super({ position, rotation, image, frames, sprites, animate });
+    this.initialPosition = { 
+      x: position.x, 
+      y: position.y 
+    };
     this.name = name;
     this.isEnemy = isEnemy;
     this.health = 100;
@@ -162,11 +166,17 @@ class Monster extends Sprite {
   faint() {
     document.querySelector('#dialogueBox').innerHTML = this.name + ' fainted!';
     gsap.to(this.position, {
-      y: this.position.y + 20
+      y: this.position.y + 20,
+      onComplete: () => {
+        gsap.set(this.position, this.initialPosition);
+        gsap.set(this, { 
+          opacity: 1 
+        });
+      }
     });
     gsap.to(this, {
       opacity: 0
-    })
+    });
   }
 }
 
