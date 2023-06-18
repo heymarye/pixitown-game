@@ -43,42 +43,6 @@ const player = new Sprite({
   }
 });
 
-const battle = new Sprite({
-  position: {
-    x: 0,
-    y: 0 
-  },
-  image: battleImg,
-  initiated: false
-});
-
-const draggle = new Sprite({
-  position: {
-    x: 800,
-    y: 100
-  },
-  image: draggleImg,
-  frames: {
-    max: 4,
-    frequency: 35
-  },
-  animate: true,
-  isEnemy: true
-});
-
-const emby = new Sprite({
-  position: {
-    x: 280,
-    y: 325
-  },
-  image: embyImg,
-  frames: {
-    max: 4,
-    frequency: 35
-  },
-  animate: true
-});
-
 // const fireball = new Sprite({
 //   position: {
 //     x: emby.position.x,
@@ -306,25 +270,3 @@ function animate() {
   }
 }
 animate();
-
-const renderedSprites = [draggle, emby];
-
-function animateBattle() {
-  window.requestAnimationFrame(animateBattle);
-  battle.draw();
-  renderedSprites.forEach(sprite => {
-    sprite.draw();
-  });
-}
-
-//event listeners for attacks
-document.querySelectorAll('button').forEach(button => {
-  button.addEventListener('click', (e) => {
-    const selectedAttack = attacks[e.currentTarget.innerHTML];
-    emby.attack({
-      attack: selectedAttack,
-      recipient: draggle,
-      renderedSprites
-    });
-  });
-});
