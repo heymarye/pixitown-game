@@ -43,19 +43,6 @@ const player = new Sprite({
   }
 });
 
-// const fireball = new Sprite({
-//   position: {
-//     x: emby.position.x,
-//     y: emby.position.y
-//   },
-//   image: fireballImg,
-//   frames: {
-//     max: 4,
-//     frequency: 10
-//   },
-//   animate: true
-// });
-
 const collisions = [];
 const battleZones = [];
 const collisionsOnMap = []; //2d array to convert data from json to map
@@ -255,7 +242,9 @@ function animate() {
               duration: 0.4,
               onComplete() {
                 //activate a new animation loop
+                initBattle();
                 animateBattle();
+                document.querySelector('#userInterface').style.display = 'block';
                 gsap.to('#overlappingBackground', {
                   opacity: 0,
                   duration: 0.4

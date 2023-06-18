@@ -10,28 +10,30 @@
   <body>
     <div class="background">
       <div id="overlappingBackground" class="background__battle"></div>
-      <!-- enemy's health bar -->
-      <div class="background__health-bar background__health-bar_draggle">
-        <p class="health-bar__character-name">Draggle</p>
-        <div class="health-bar__scale">
-          <div class="scale_wasted"></div>
-          <div id="enemyHealth" class="scale_left"></div>
-        </div>
-      </div>
-      <!-- player's health bar -->
-      <div class="background__health-bar background__health-bar_emby">
-        <p class="health-bar__character-name">Emby</p>
-        <div class="health-bar__scale">
-          <div class="scale_wasted"></div>
-          <div id="playerHealth" class="scale_left"></div>
-        </div>
-      </div>
       <canvas></canvas>
-      <div class="background__battle-bar">
-        <div id="dialogueBox" class="battle-bar__dialogue-box"></div>
-        <div id="attacksBox" class="battle-bar__attacks"></div>
-        <div id="attackType" class="battle-bar__attack-types">
-          <p>Attack Type</p>
+      <div id="userInterface">
+        <!-- enemy's health bar -->
+        <div class="background__health-bar background__health-bar_draggle">
+          <p class="health-bar__character-name">Draggle</p>
+          <div class="health-bar__scale">
+            <div class="scale_wasted"></div>
+            <div id="enemyHealth" class="scale_left"></div>
+          </div>
+        </div>
+        <!-- player's health bar -->
+        <div class="background__health-bar background__health-bar_emby">
+          <p class="health-bar__character-name">Emby</p>
+          <div class="health-bar__scale">
+            <div class="scale_wasted"></div>
+            <div id="playerHealth" class="scale_left"></div>
+          </div>
+        </div>
+        <div class="background__battle-bar">
+          <div id="dialogueBox" class="battle-bar__dialogue-box"></div>
+          <div id="attacksBox" class="battle-bar__attacks"></div>
+          <div id="attackType" class="battle-bar__attack-types">
+            <p>Attack Type</p>
+          </div>
         </div>
       </div>
     </div>

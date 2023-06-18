@@ -4,7 +4,9 @@ const monsters = {
       x: 800,
       y: 100
     },
-    image: draggleImg,
+    image: {
+      src: '/assets/draggleSprite.png'
+    },
     frames: {
       max: 4,
       frequency: 35
@@ -19,7 +21,9 @@ const monsters = {
       x: 280,
       y: 325
     },
-    image: embyImg,
+    image: {
+      src: '/assets/embySprite.png'
+    },
     frames: {
       max: 4,
       frequency: 35

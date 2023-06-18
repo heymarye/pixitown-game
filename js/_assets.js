@@ -18,12 +18,3 @@ playerRightImg.src = '/assets/playerRight.png';
 
 const battleImg = new Image();
 battleImg.src = '/assets/battleBackground.png';
-
-const draggleImg = new Image();
-draggleImg.src = '/assets/draggleSprite.png';
-
-const embyImg = new Image();
-embyImg.src = '/assets/embySprite.png';
-
-// const fireballImg = new Image();
-// fireballImg.src = '/assets/fireball.png';
