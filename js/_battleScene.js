@@ -7,35 +7,8 @@ const battle = new Sprite({
   initiated: false
 });
 
-const draggle = new Sprite({
-  position: {
-    x: 800,
-    y: 100
-  },
-  image: draggleImg,
-  frames: {
-    max: 4,
-    frequency: 35
-  },
-  animate: true,
-  name: 'Draggle',
-  isEnemy: true
-});
-
-const emby = new Sprite({
-  position: {
-    x: 280,
-    y: 325
-  },
-  image: embyImg,
-  frames: {
-    max: 4,
-    frequency: 35
-  },
-  animate: true,
-  name: 'Emby'
-});
-
+const draggle = new Monster(monsters.Draggle);
+const emby = new Monster(monsters.Emby);
 const renderedSprites = [draggle, emby];
 
 function animateBattle() {
@@ -46,8 +19,13 @@ function animateBattle() {
   });
 }
 
-const queue = [];
+emby.attacks.forEach(attack => {
+  const button = document.createElement('button');
+  button.innerHTML = attack.name;
+  document.querySelector('#attacksBox').append(button);
+});
 
+const queue = [];
 //event listeners for attacks
 document.querySelectorAll('button').forEach(button => {
   button.addEventListener('click', (e) => {

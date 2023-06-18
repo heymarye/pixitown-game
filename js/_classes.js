@@ -1,5 +1,5 @@
 class Sprite {
-  constructor({ position, rotation = 0, image, frames = { max: 1, frequency: 15 }, sprites, animate = false, name, isEnemy = false }) {
+  constructor({ position, rotation = 0, image, frames = { max: 1, frequency: 15 }, sprites, animate = false }) {
     this.position = position;
     //this.rotation = rotation;
     this.image = image;
@@ -11,9 +11,6 @@ class Sprite {
     this.sprites = sprites;
     this.opacity = 1;
     this.animate = animate;
-    this.name = name;
-    this.health = 100;
-    this.isEnemy = isEnemy;
   }
 
   draw() {
@@ -54,6 +51,16 @@ class Sprite {
       }
     }
     return;
+  }
+}
+
+class Monster extends Sprite {
+  constructor({ position, rotation = 0, image, frames = { max: 1, frequency: 15 }, sprites, animate = false, name, isEnemy = false, attacks }) {
+    super({ position, rotation, image, frames, sprites, animate });
+    this.name = name;
+    this.isEnemy = isEnemy;
+    this.health = 100;
+    this.attacks = attacks;
   }
 
   attack({ attack, recipient, renderedSprites }) {
