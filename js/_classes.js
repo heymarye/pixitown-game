@@ -98,6 +98,7 @@ class Monster extends Sprite {
           duration: 0.2,
           onComplete: () => {
             //enemy gets hit
+            audio.tackle.play();
             gsap.to(healthBar, {
               width: recipient.health + '%'
             });
@@ -121,6 +122,7 @@ class Monster extends Sprite {
       case 'Fireball':
         const fireballImg = new Image();
         fireballImg.src = '/assets/fireball.png';
+        audio.initFireball.play();
 
         const fireball = new Sprite({
           position: {
@@ -141,6 +143,8 @@ class Monster extends Sprite {
           x: recipient.position.x,
           y: recipient.position.y,
           onComplete: () => {
+            //enemy gets hit
+            audio.fireball.play();
             gsap.to(healthBar, {
               width: recipient.health + '%'
             });
@@ -171,12 +175,14 @@ class Monster extends Sprite {
         gsap.set(this.position, this.initialPosition);
         gsap.set(this, { 
           opacity: 1 
-        });
+        }); 
       }
     });
     gsap.to(this, {
       opacity: 0
     });
+    audio.battle.stop();
+    audio.victory.play();
   }
 }
 

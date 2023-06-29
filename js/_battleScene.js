@@ -48,6 +48,7 @@ function initBattle() {
             opacity: 1,
             onComplete() {
               cancelAnimationFrame(battleAnimation);
+              audio.map.play();
               battle.initiated = false;
               animate();
               document.querySelector('#userInterface').style.display = 'none';
@@ -75,8 +76,9 @@ function initBattle() {
               opacity: 1,
               onComplete() {
                 cancelAnimationFrame(battleAnimation);
+                audio.map.play();
                 battle.initiated = false;
-                animate();
+                animate(); 
                 document.querySelector('#userInterface').style.display = 'none';
                 gsap.to('#overlappingBackground', {
                   opacity: 0
@@ -101,9 +103,6 @@ function animateBattle() {
     sprite.draw();
   });
 }
-
-//initBattle();
-//animateBattle();
 
 document.querySelector('#dialogueBox').addEventListener('click', (e) => {
   if (queue.length > 0) {

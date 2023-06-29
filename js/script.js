@@ -226,10 +226,13 @@ function animate() {
         secondRectangle: battleZones[boundary]
       }) && 
       overlappingArea > (player.width + player.height) / 2 &&
-      Math.random() < 0.01 //1% chance to activate a battle
+      Math.random() < 0.005 //0.5% chance to activate a battle
       ) {
         //deactivate current animation loop
         window.cancelAnimationFrame(animation);
+        audio.map.stop();
+        audio.initBattle.play();
+        audio.battle.play();
         battle.initiated = true;
         gsap.to('#overlappingBackground', {
           opacity: 1,
